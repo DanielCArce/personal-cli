@@ -1,6 +1,12 @@
-#Definición del proyecto
+# Project review
 
 ---
 
-Crear un cli que permita obtener los tipos de cambio del dia y almancenarlos por un periodo
-para analizar el comportamiento del los mismos y poder tomar atención.
+A CLI for storage and request currency exchange rates and make more easy the way of obtain it.
+
+##Requeriments of project
+
+- [] Scraping the website for get currency exchange rate of CRC.
+- [] Scraping the website for get currency exchange rate of COL.
+- [] Scraping the website for get currency exchange rate of MXN.
+- [] Scraping the website for get currency exchange rate of GTA.

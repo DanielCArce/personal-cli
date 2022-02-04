@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "./bin/index.js",
-  "bin": "./bin/index.js",
+  "bin": {
+    "@danielcarce/personal-cli": "./bin/index.js",
+    "personal-cli": "./bin/index.js"
+  },
+  "type": "module",
   "scripts": {
-    "debug": "node ."
+    "debug": "node inspect .",
+    "dev": "node ."
   },
   "author": "DanielCArce",
   "license": "MIT",
@@ -13,7 +18,7 @@
     "cron": "^1.8.2",
     "dotenv": "^11.0.0",
     "inquirer": "^8.2.0",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^3.2.0",
     "xml-js": "^1.6.11"
   }
 }

@@ -1,0 +1,34 @@
+{
+  "Entities": [
+    {
+      "Compra": "3186",
+      "Venta": "3220",
+      "Entity": "Promerica"
+    },
+    {
+      "Compra": "3181",
+      "Venta": "3215",
+      "Entity": "BAC"
+    },
+    {
+      "Compra": "3149",
+      "Venta": "3208",
+      "Entity": "Nacional"
+    },
+    {
+      "Compra": "3148",
+      "Venta": "3207",
+      "Entity": "BCR"
+    },
+    {
+      "Compra": "3179",
+      "Venta": "3209",
+      "Entity": "Popular"
+    },
+    {
+      "Compra": "317",
+      "Venta": "318",
+      "Entity": "Central"
+    }
+  ]
+}

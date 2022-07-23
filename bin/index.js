@@ -1,74 +1,35 @@
 #! /usr/bin/env node
-import dotenv from "dotenv";
-import inquirer from "inquirer";
-import {
-  get_entities_names,
-  get_rate_entity,
-} from "../utils/get_Indicators.js";
-import { get_current_date } from "../utils/get_date.js";
-import { api_cr_call } from "../api/api_cr.js";
+//Load of ENV
+const dotenv = require("dotenv");
 dotenv.config();
-let questions = [
+//Core Package
+const inquirer = require("inquirer");
+const { consume_api_bccr } = require("../api/api_cr");
+
+//Utils packages
+const { get_indicator_info } = require("../utils/get_indicators");
+const questions = [
   {
     type: "list",
-    name: "TipoCambioTipo",
-    message: "Seleciona que tipo de cambio",
-    choices: ["Compra", "Venta", "Promedio"],
+    name: "operation",
+    choices: ["Tipo de Cambio de Compra", "Tipo de Cambio de Venta"],
   },
   {
     type: "list",
-    name: "TipoCambioEntidad",
-    message: "",
-    choices: get_entities_names(),
-  },
-  {
-    type: "input",
-    name: "DateStart",
-    message: "Fecha Inicial para buscar",
-    default: async () => {
-      return await get_current_date("/");
-    },
-  },
-  {
-    type: "input",
-    name: "DateEnd",
-    message: "Fecha final para buscar",
-    default: async () => {
-      return await get_current_date("/");
-    },
+    name: "bank",
+    choices: [
+      "Banco Nacional de Costa Rica",
+      "Banco de Costa Rica",
+      "Banco Central de Costa Rica",
+      "Banco Promerica",
+      "Banco BAC Credomatic",
+      "Banco Popular y de Dessarollo Comunal",
+    ],
   },
 ];
 
 inquirer.prompt(questions).then(async (answers) => {
-  console.log({ answers });
-  const { DateStart, DateEnd } = answers;
-  let rate_code = null;
-  const { TipoCambioTipo, TipoCambioEntidad } = answers;
-  if (TipoCambioTipo == "Compra") {
-    rate_code = await get_rate_entity(TipoCambioEntidad, "Compra");
-    console.log(
-      `El Tipo de Cambio de: ${TipoCambioEntidad} es: ${await api_cr_call(
-        DateStart,
-        DateEnd,
-        rate_code
-      )}`
-    );
-  }
-  if (TipoCambioTipo == "Venta") {
-    rate_code = await get_rate_entity(TipoCambioEntidad, "Venta");
-    console.log(
-      `El Tipo de Cambio de: ${TipoCambioEntidad} es: ${await api_cr_call(
-        DateStart,
-        DateEnd,
-        rate_code
-      )}`
-    );
-  } else {
-    const buy_rate = await get_rate_entity(TipoCambioEntidad, "Compra");
-    const sell_rate = await get_rate_entity(TipoCambioEntidad, "Venta");
-    const buy = await api_cr_call(DateStart, DateEnd, buy_rate);
-    const sell = await api_cr_call(DateStart, DateEnd, sell_rate);
-
-    console.log((buy + sell) / 2);
-  }
+  // console.log(answers);
+  const indicator = await get_indicator_info(answers.operation, answers.bank);
+  consume_api_bccr(indicator);
 });

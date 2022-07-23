@@ -7,7 +7,6 @@
     "@danielcarce/personal-cli": "./bin/index.js",
     "personal-cli": "./bin/index.js"
   },
-  "type": "module",
   "scripts": {
     "debug": "node inspect .",
     "dev": "node ."
@@ -18,7 +17,7 @@
     "cron": "^1.8.2",
     "dotenv": "^11.0.0",
     "inquirer": "^8.2.0",
-    "node-fetch": "^3.2.0",
+    "node-fetch": "^2.6.7",
     "xml-js": "^1.6.11"
   }
 }

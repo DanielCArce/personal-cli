@@ -1,22 +1,21 @@
-const fetch = require("node-fetch");
-const dateFormated = require("../utils/get_format_date");
-const { write_on_disk } = require("../utils/write_on_disk");
-const { xml2json } = require("xml-js");
-const { TOKEN_BCCR, EMAIL_BCCR, NAME_BCCR, SUBNIVEL_BCCR, ENDPOINT_BCCR } =
+import dotenv from "dotenv";
+dotenv.config();
+import fetch from "node-fetch";
+import transformToXML from "./../utils/handle_xml.js";
+const { ENDPOINT_BCCR, TOKEN_BCCR, EMAIL_BCCR, NAME_BCCR, SUBNIVEL_BCCR } =
   process.env;
-
-async function consume_api_bccr(indicator) {
-  const date_start = dateFormated();
-  const date_end = dateFormated();
-  console.log({ date_start });
-  console.log({ date_end });
-  const query = await fetch(
-    `${ENDPOINT_BCCR}Indicador=${indicator}&FechaInicio=${date_start}&FechaFinal=${date_end}&Nombre=${NAME_BCCR}&SubNiveles=${SUBNIVEL_BCCR}&CorreoElectronico=${EMAIL_BCCR}&Token=${TOKEN_BCCR}`
+const consume_api = async ({ indicator, start_date, end_date }) => {
+  const request = await fetch(
+    `${ENDPOINT_BCCR}Indicador=${indicator}&FechaInicio=${start_date}&FechaFinal=${end_date}&Nombre=${NAME_BCCR}&SubNiveles=${SUBNIVEL_BCCR}&CorreoElectronico=${EMAIL_BCCR}&Token=${TOKEN_BCCR}`
   );
-  const data = await query.text();
-  console.log(data);
-}
-
-module.exports = {
-  consume_api_bccr,
+  return transformToXML({
+    filename: `${indicator}`,
+    data: await request.text(),
+  });
 };
+export default consume_api;
+// consume_api({
+//   indicator: "3179",
+//   start_date: "17/09/2022",
+//   end_date: "17/09/2022",
+// });

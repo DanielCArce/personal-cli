@@ -1,18 +1,21 @@
 #! /usr/bin/env node
 //Load of ENV
-const dotenv = require("dotenv");
-dotenv.config();
+import { config } from "dotenv";
+config();
 //Core Package
-const inquirer = require("inquirer");
-const { consume_api_bccr } = require("../api/api_cr");
-
+import inquirer from "inquirer";
+import getIndicador from "../utils/getIndicador.js";
+import APICR from "../api/api_cr.js";
 //Utils packages
-const { get_indicator_info } = require("../utils/get_indicators");
 const questions = [
   {
     type: "list",
     name: "operation",
-    choices: ["Tipo de Cambio de Compra", "Tipo de Cambio de Venta"],
+    choices: [
+      "Tipo de Cambio de Compra",
+      "Tipo de Cambio de Venta",
+      "Tipo de Cambio Promedio",
+    ],
   },
   {
     type: "list",
@@ -26,10 +29,33 @@ const questions = [
       "Banco Popular y de Dessarollo Comunal",
     ],
   },
+  {
+    type: "input",
+    name: "start_date",
+    default: () => {
+      let date = new Date();
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+    },
+  },
+  {
+    type: "input",
+    name: "end_date",
+    default: () => {
+      let date = new Date();
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+    },
+  },
 ];
 
 inquirer.prompt(questions).then(async (answers) => {
-  // console.log(answers);
-  const indicator = await get_indicator_info(answers.operation, answers.bank);
-  consume_api_bccr(indicator);
+  const ind = await getIndicador(answers.operation, answers.bank);
+  const result = await APICR({
+    indicator: ind,
+    banco: answers.bank,
+    start_date: answers.start_date,
+    end_date: answers.end_date,
+  });
+  console.log(
+    `El ${answers.operation} del ${answers.bank} es ${Number(result)}`
+  );
 });
